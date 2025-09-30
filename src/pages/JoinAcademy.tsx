@@ -9,28 +9,6 @@ import davidImg from "@/assets/Mask group3.png";
 import partnerImg from "@/assets/image 22.png";
 import { useNavigate } from "react-router-dom";
 
-// Custom Tick Icon as SVG Component
-function TickIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="28"
-      height="28"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="#1E1E7A"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="mr-4"
-      style={{ minWidth: 28, minHeight: 28 }}
-    >
-      <circle cx="12" cy="12" r="10" />
-      <path d="M9 12l2 2 4-4" />
-    </svg>
-  );
-}
-
 const navItems = [
   { label: "Home", ref: "home" },
   { label: "Value Proposition", ref: "value" },
@@ -162,23 +140,23 @@ export default function JoinAcademy() {
               </div>
               <ul className="m-0 p-0 list-none text-base sm:text-lg">
                 <li className="mb-4 flex items-center">
-                  <TickIcon />
+                  <span className="text-[#170961] text-xl font-bold mr-4">✔</span>
                   Industry-relevant curriculum
                 </li>
                 <li className="mb-4 flex items-center">
-                  <TickIcon />
+                  <span className="text-[#170961] text-xl font-bold mr-4">✔</span>
                   Internship & job placement support
                 </li>
                 <li className="mb-4 flex items-center">
-                  <TickIcon />
+                  <span className="text-[#170961] text-xl font-bold mr-4">✔</span>
                   Hands-on projects & mentorship
                 </li>
                 <li className="mb-4 flex items-center">
-                  <TickIcon />
+                  <span className="text-[#170961] text-xl font-bold mr-4">✔</span>
                   Certificates to showcase skills
                 </li>
                 <li className="flex items-center">
-                  <TickIcon />
+                  <span className="text-[#170961] text-xl font-bold mr-4">✔</span>
                   Pathway from beginner to professional
                 </li>
               </ul>
@@ -208,23 +186,23 @@ export default function JoinAcademy() {
               </div>
               <ul className="m-0 p-0 list-none text-base sm:text-lg">
                 <li className="mb-4 flex items-center">
-                  <TickIcon />
+                  <span className="text-[#170961] text-xl font-bold mr-4">✔</span>
                   Mentorship: Learn from experienced developers and educators.
                 </li>
                 <li className="mb-4 flex items-center">
-                  <TickIcon />
+                  <span className="text-[#170961] text-xl font-bold mr-4">✔</span>
                   Hands-On Projects: Build real applications, not just theory.
                 </li>
                 <li className="mb-4 flex items-center">
-                  <TickIcon />
+                  <span className="text-[#170961] text-xl font-bold mr-4">✔</span>
                   Internships: Gain industry exposure with real teams.
                 </li>
                 <li className="mb-4 flex items-center">
-                  <TickIcon />
+                  <span className="text-[#170961] text-xl font-bold mr-4">✔</span>
                   Certificates: Showcase your skills to employers.
                 </li>
                 <li className="flex items-center">
-                  <TickIcon />
+                  <span className="text-[#170961] text-xl font-bold mr-4">✔</span>
                   Career Support: Resume crafting, job readiness, and networking.
                 </li>
               </ul>

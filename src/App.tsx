@@ -20,16 +20,32 @@ import ApplicationForm2 from "./pages/ApplicationForm2";
 import StartProject from "./pages/StartProject";
 import JoinAcademy from "./pages/JoinAcademy";
 
-const queryClient = new QueryClient();
+// Import the AdminDashboard page
+import AdminDashboard from "./pages/AdminDashboard";
+
+// Create QueryClient with optimized configuration
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 30000, // 30 seconds
+      gcTime: 300000, // 5 minutes (formerly cacheTime)
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: true,
+      retry: 1,
+    },
+  },
+});
 
 // Helper to check if the header should be shown
 function useShowHeader() {
   const location = useLocation();
+  // Don't show header on form pages and admin dashboard
   return ![
     "/applicationform",
     "/applicationform2",
     "/start-project",
-    "/join-academy"
+    "/join-academy",
+    "/admin-dashboard" // Hide header on admin dashboard
   ].includes(location.pathname);
 }
 
@@ -48,10 +64,17 @@ function AppRoutes() {
         <Route path="/careers" element={<Careers />} />
         <Route path="/partnership" element={<Partnership />} />
         <Route path="/contact" element={<Contact />} />
+        
+        {/* Form Routes */}
         <Route path="/applicationform" element={<ApplicationForm />} />
         <Route path="/applicationform2" element={<ApplicationForm2 />} />
         <Route path="/start-project" element={<StartProject />} />
         <Route path="/join-academy" element={<JoinAcademy />} />
+        
+        {/* Admin Dashboard Route */}
+        <Route path="/admin-dashboard" element={<AdminDashboard />} />
+        
+        {/* 404 Not Found */}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>

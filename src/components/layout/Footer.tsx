@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
-import instagramIcon from "@/assets/ig.png";
+import instagramIcon from "@/assets/instagram.png";
 import whatsappIcon from "@/assets/whatsapp.png";
-import facebookIcon from "@/assets/facebook.png";
-import newIcon from "@/assets/new.png";
+import xIcon from "@/assets/x.png"; // White X icon
+import youtubeIcon from "@/assets/youtube.png"; // White YouTube icon
 import codingLogo from "@/assets/Coding PLayground 1.png";
 
 export function Footer() {
@@ -18,34 +18,38 @@ export function Footer() {
               className="h-16 w-auto object-contain mb-2"
               style={{ filter: "brightness(0) invert(1)" }}
             />
-            <div className="text-sm">
+            <div className="text-sm font-nunito">
               CodingPlayGround<br />
               Technologies
             </div>
           </div>
 
-          {/* Center: Socials, blue boxes for icons, NO white circle */}
+          {/* Center: Socials */}
           <div className="flex flex-col items-center">
             <div className="font-nunito text-base mb-2">Join our Community on</div>
             <div className="flex gap-3">
-              <a href="#" target="_blank" rel="noopener noreferrer">
-                <div className="bg-[#170961] rounded-[6px] w-8 h-8 flex items-center justify-center">
-                  <img src={instagramIcon} alt="Instagram" className="w-5 h-5 object-contain" />
+              {/* Instagram */}
+              <a href="https://www.instagram.com/codingplaygroundtech?igsh=MWYxc3c1Z2EzbzVpbA==" target="_blank" rel="noopener noreferrer">
+                <div className="bg-white rounded-[6px] w-10 h-10 flex items-center justify-center hover:scale-110 transition-transform">
+                  <img src={instagramIcon} alt="Instagram" className="w-6 h-6 object-contain" />
                 </div>
               </a>
-              <a href="https://wa.me/" target="_blank" rel="noopener noreferrer">
-                <div className="bg-[#170961] rounded-[6px] w-8 h-8 flex items-center justify-center">
-                  <img src={whatsappIcon} alt="WhatsApp" className="w-5 h-5 object-contain" />
+              {/* WhatsApp */}
+              <a href="https://chat.whatsapp.com/F34IA2fPb0e5XBfd2fvO7j?mode=ems_copy_t" target="_blank" rel="noopener noreferrer">
+                <div className="bg-white rounded-[6px] w-10 h-10 flex items-center justify-center hover:scale-110 transition-transform">
+                  <img src={whatsappIcon} alt="WhatsApp" className="w-6 h-6 object-contain" />
                 </div>
               </a>
-              <a href="#" target="_blank" rel="noopener noreferrer">
-                <div className="bg-[#170961] rounded-[6px] w-8 h-8 flex items-center justify-center">
-                  <img src={facebookIcon} alt="Facebook" className="w-5 h-5 object-contain" />
+              {/* X */}
+              <a href="https://x.com/CodinPlayground?t=g1-W48xzQ3c9MvSspuBpUA&s=09" target="_blank" rel="noopener noreferrer">
+                <div className="bg-white rounded-[6px] w-10 h-10 flex items-center justify-center hover:scale-110 transition-transform">
+                  <img src={xIcon} alt="X" className="w-6 h-6 object-contain" />
                 </div>
               </a>
-              <a href="#" target="_blank" rel="noopener noreferrer">
-                <div className="bg-[#170961] rounded-[6px] w-8 h-8 flex items-center justify-center">
-                  <img src={newIcon} alt="New" className="w-5 h-5 object-contain" />
+              {/* YouTube */}
+              <a href="https://youtube.com/@coding_111?si=mUbRIaBv_OY8osg_" target="_blank" rel="noopener noreferrer">
+                <div className="bg-white rounded-[6px] w-10 h-10 flex items-center justify-center hover:scale-110 transition-transform">
+                  <img src={youtubeIcon} alt="YouTube" className="w-6 h-6 object-contain" />
                 </div>
               </a>
             </div>
@@ -65,10 +69,8 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Divider */}
         <div className="w-full border-t border-white/30 my-4" />
 
-        {/* Copyright Section */}
         <div className="text-center text-white text-sm font-nunito">
           &copy; 2025 All rights reserved
         </div>

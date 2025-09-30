@@ -102,7 +102,7 @@ const Team = () => {
                   className="w-36 h-36 rounded-full mx-auto mb-4 object-cover shadow-md group-hover:border-primary transition-smooth"
                 />
                 <h3 className="text-xl font-bold text-foreground mb-1 font-oswald">{member.name}</h3>
-                <p className="text-primary font-medium">{member.role}</p>
+                <p className="text-primary font-medium font-nunito">{member.role}</p>
               </Card>
             ))}
           </div>

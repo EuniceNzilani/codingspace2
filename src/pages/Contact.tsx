@@ -5,6 +5,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { Footer } from "@/components/layout/Footer";
+import { db } from "@/firebase"; // Adjust the path to your firebase config
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 // Icon imports
 import headOfficeIcon from "../assets/head office.png";
@@ -18,19 +20,38 @@ import newIcon from "../assets/new.png";
 const Contact = () => {
   // Form state
   const [form, setForm] = useState({ name: "", subject: "", message: "" });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert("Message sent!");
-    setForm({ name: "", subject: "", message: "" });
+    setIsSubmitting(true);
+
+    try {
+      // Add document to Firebase Firestore
+      await addDoc(collection(db, "contactMessages"), {
+        name: form.name,
+        subject: form.subject,
+        message: form.message,
+        timestamp: serverTimestamp(),
+        status: "unread" // Optional: to track message status
+      });
+
+      alert("Message sent successfully!");
+      setForm({ name: "", subject: "", message: "" });
+    } catch (error) {
+      console.error("Error sending message:", error);
+      alert("Failed to send message. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
-    <main className="pt-12 bg-white">
+    <main className="pt-12 bg-white font-nunito">
       {/* Hero Section */}
       <section className="py-8 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -160,8 +181,9 @@ const Contact = () => {
                   type="submit" 
                   variant="hero" 
                   className="w-full bg-[#170961] hover:bg-[#1a0b70] font-nunito font-semibold"
+                  disabled={isSubmitting}
                 >
-                  Send
+                  {isSubmitting ? "Sending..." : "Send"}
                 </Button>
               </form>
             </Card>

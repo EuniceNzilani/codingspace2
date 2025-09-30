@@ -153,7 +153,7 @@ const Training = () => {
                       key={role.title}
                       className={`flex flex-col items-center font-medium text-base sm:text-lg lg:text-[1.08rem] text-primary min-w-0 relative rounded-[15px] shadow-card px-2 pt-6 sm:pt-8 pb-4 sm:pb-6 ${
                         role.highlight ? 'bg-accent/20' : 'bg-card'
-                      }`}
+                      } font-nunito`}
                     >
                       <div className="mb-3">{role.icon}</div>
                       <span className="text-center leading-tight">{role.title}</span>

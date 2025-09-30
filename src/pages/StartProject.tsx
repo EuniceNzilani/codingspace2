@@ -1,7 +1,9 @@
 import React, { useState, useRef } from "react";
-import { Header } from "@/components/layout/Header"; // Assuming your header component is here
+import { Header } from "@/components/layout/Header";
+import { collection, addDoc } from 'firebase/firestore';
+import { db } from '@/firebase';
 
-// --- SuccessPopup: green color updated to #14A388, fonts as requested ---
+// --- SuccessPopup component ---
 function SuccessPopup({ open, onClose }: { open: boolean; onClose: () => void }) {
   if (!open) return null;
   return (
@@ -24,7 +26,7 @@ function SuccessPopup({ open, onClose }: { open: boolean; onClose: () => void })
         </div>
         <button
           onClick={onClose}
-          className="mt-4 bg-[#14A388] text-white border-none px-8 py-3 rounded-lg font-medium text-base shadow-md cursor-pointer font-nunito"
+          className="mt-4 bg-[#170961] text-white border-none px-8 py-3 rounded-lg font-medium text-base shadow-md cursor-pointer font-nunito"
         >Close</button>
       </div>
     </div>
@@ -42,6 +44,8 @@ export default function StartProject() {
     description: "",
   });
   const [popupOpen, setPopupOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const timelineDateRef = useRef<HTMLInputElement>(null);
 
   function handleChange(
@@ -51,18 +55,37 @@ export default function StartProject() {
     setForm(f => ({ ...f, [name]: value }));
   }
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setPopupOpen(true);
-    setForm({
-      name: "",
-      email: "",
-      company: "",
-      projectType: "",
-      budget: "",
-      timeline: "",
-      description: "",
-    });
+    setLoading(true);
+    setError(null);
+
+    try {
+      const projectData = {
+        ...form,
+        createdAt: new Date().toISOString(),
+        status: 'pending'
+      };
+
+      const projectsRef = collection(db, 'projects');
+      await addDoc(projectsRef, projectData);
+
+      setPopupOpen(true);
+      setForm({
+        name: "",
+        email: "",
+        company: "",
+        projectType: "",
+        budget: "",
+        timeline: "",
+        description: "",
+      });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred while submitting the project');
+      console.error('Error submitting project:', err);
+    } finally {
+      setLoading(false);
+    }
   }
 
   function handlePopupClose() {
@@ -87,10 +110,9 @@ export default function StartProject() {
   }
 
   return (
-    <div className="bg-white min-h-screen w-screen overflow-x-hidden font-nunito">
+    <div className="bg-white min-h-screen w-screen overflow-x-hidden font-nunito pt-10">
       <Header />
       <main className="max-w-3xl mx-auto px-2 sm:px-6 py-16">
-        {/* Heading */}
         <h1 className="font-oswald font-black text-3xl sm:text-4xl text-center mb-2 text-[#170961]">
           Start a project
         </h1>
@@ -98,7 +120,12 @@ export default function StartProject() {
           Fill in your details for a preferred project and for a streamlined deliverances
         </div>
         
-        {/* Card with form, shadow only, NO border */}
+        {error && (
+          <div className="mb-4 p-4 bg-red-100 text-red-700 rounded-lg">
+            {error}
+          </div>
+        )}
+        
         <form
           onSubmit={handleSubmit}
           className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 md:p-10 mx-auto flex flex-col max-w-2xl"
@@ -143,7 +170,7 @@ export default function StartProject() {
             className="p-3 text-base rounded-lg border border-gray-200 outline-none shadow-sm bg-white text-dark font-nunito mb-6 focus:ring-2 focus:ring-[#170961] focus:border-transparent"
           />
 
-          {/* Project Type & Budget Range (side by side) */}
+          {/* Project Type & Budget Range */}
           <div className="flex flex-col sm:flex-row gap-5 mb-6">
             <div className="flex-1">
               <label className="block font-oswald font-semibold text-base text-dark mb-2">Project Type</label>
@@ -225,9 +252,12 @@ export default function StartProject() {
 
           <button
             type="submit"
-            className="mx-auto w-52 bg-[#170961] hover:bg-[#130755] text-white font-bold py-3 rounded-lg shadow-md transition-colors duration-200 mt-6 block"
+            disabled={loading}
+            className={`mx-auto w-52 bg-[#170961] hover:bg-[#130755] text-white font-bold py-3 rounded-lg shadow-md transition-colors duration-200 mt-6 block ${
+              loading ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
           >
-            Submit
+            {loading ? 'Submitting...' : 'Submit'}
           </button>
         </form>
       </main>

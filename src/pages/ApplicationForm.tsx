@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { Header } from "@/components/layout/Header";
+import { collection, addDoc } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { db, storage } from '@/firebase';
 
 type ApplicationFormProps = {
   onBack?: () => void;
@@ -30,8 +33,11 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ onBack, onNavigate })
     portfolio: '',
     resume: null as File | null
   });
+
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [fileName, setFileName] = useState('Inbox');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -62,9 +68,56 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ onBack, onNavigate })
     }
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLButtonElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    setShowSuccessPopup(true);
+    setLoading(true);
+    setError(null);
+
+    try {
+      let resumeUrl = '';
+      
+      // Upload resume if exists
+      if (formData.resume) {
+        const storageRef = ref(storage, `resumes/${formData.resume.name}-${Date.now()}`);
+        await uploadBytes(storageRef, formData.resume);
+        resumeUrl = await getDownloadURL(storageRef);
+      }
+
+      // Prepare application data
+      const applicationData = {
+        name: formData.name,
+        email: formData.email,
+        role: formData.role,
+        linkedin: formData.linkedin,
+        github: formData.github,
+        portfolio: formData.portfolio,
+        resumeUrl, // Store the download URL
+        status: 'pending',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+
+      // Add to Firestore
+      const applicationsRef = collection(db, 'applications');
+      await addDoc(applicationsRef, applicationData);
+
+      setShowSuccessPopup(true);
+      setFormData({
+        name: '',
+        email: '',
+        role: '',
+        linkedin: '',
+        github: '',
+        portfolio: '',
+        resume: null
+      });
+      setFileName('Inbox');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred while submitting your application');
+      console.error('Error submitting application:', err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const closePopup = () => {
@@ -79,7 +132,6 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ onBack, onNavigate })
       resume: null
     });
     setFileName('Inbox');
-    // Navigate back to the main app after successful submission
     onBack && onBack();
   };
 
@@ -98,6 +150,12 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ onBack, onNavigate })
         <div className="text-base sm:text-lg text-dark text-center mb-8 font-nunito">
           Apply to your preferred available role and become part of our innovative team
         </div>
+        
+        {error && (
+          <div className="mb-4 p-4 bg-red-100 text-red-700 rounded-lg text-center">
+            {error}
+          </div>
+        )}
         
         <div className="bg-white rounded-xl shadow-lg p-6 sm:p-8 md:p-10 max-w-3xl mx-auto border border-gray-200 mb-6">
           <div className="font-oswald font-bold text-xl text-primary mb-5 text-center">
@@ -216,9 +274,12 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ onBack, onNavigate })
             <button
               type="button"
               onClick={handleSubmit}
-              className="bg-primary text-white border-none rounded-lg text-lg font-semibold py-3 shadow-md cursor-pointer w-full sm:w-52 mt-6 font-nunito hover:bg-primary-dark transition-colors duration-200"
+              disabled={loading}
+              className={`bg-primary text-white border-none rounded-lg text-lg font-semibold py-3 shadow-md cursor-pointer w-full sm:w-52 mt-6 font-nunito hover:bg-primary-dark transition-colors duration-200 ${
+                loading ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
             >
-              Submit Application
+              {loading ? 'Submitting...' : 'Submit Application'}
             </button>
           </div>
         </div>

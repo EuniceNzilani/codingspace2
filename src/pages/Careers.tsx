@@ -70,7 +70,7 @@ const Careers = ({ onApply }: { onApply?: () => void }) => {
   ];
 
   return (
-    <main className="pt-16">
+    <main className="pt-16 font-nunito">
       {/* Hero Section */}
       <section className="py-16 sm:py-20 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -122,7 +122,7 @@ const Careers = ({ onApply }: { onApply?: () => void }) => {
                   onClick={handleApplyNow}
                   variant="hero" 
                   size="lg"
-                  className="w-full max-w-xs mx-auto bg-primary hover:bg-primary/90"
+                  className="w-full max-w-xs mx-auto bg-primary hover:bg-primary/90 font-nunito"
                 >
                   Apply Now
                 </Button>
